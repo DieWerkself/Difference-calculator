@@ -1,7 +1,5 @@
 {
-  "ID": "SMG",
-  "Abbrev": "UTF-8",
-  "SortAs": "SGML",
-  "follow": true,
-  "uniq": true
+  "timeout": 20,
+  "verbose": true,
+  "host": "hexlet.io"
 }

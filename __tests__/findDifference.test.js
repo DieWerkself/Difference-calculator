@@ -2,19 +2,25 @@ import { test, expect } from '@jest/globals';
 import path from 'node:path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import fs from 'fs';
+import { readFileSync } from 'node:fs';
 import gendiff from '../src/findDifference.js';
+import parseFile from '../src/lib/parsers.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
-const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
-const file1 = JSON.parse(readFile('file1.json'));
-const file2 = JSON.parse(readFile('file2.json'));
-const expected = readFile('expected.txt');
+test('JSONdifference', () => {
+  const file1 = parseFile(getFixturePath('file1.json'));
+  const file2 = parseFile(getFixturePath('file2.json'));
+  const expected = readFileSync(getFixturePath('JSONexpected'), { encoding: 'utf8' });
+  expect(gendiff(file1, file2)).toEqual(expected);
+});
 
-test('half', () => {
+test('YAMLdifference', () => {
+  const file1 = parseFile(getFixturePath('file1.yaml'));
+  const file2 = parseFile(getFixturePath('file2.yaml'));
+  const expected = readFileSync(getFixturePath('YAMLexpected'), { encoding: 'utf8' });
   expect(gendiff(file1, file2)).toEqual(expected);
 });

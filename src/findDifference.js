@@ -4,7 +4,7 @@ const gendiff = (file1, file2) => {
   const uniqKeys = _.union(Object.keys(file1), Object.keys(file2));
   const sortedUniqKeys = _.sortBy(uniqKeys);
 
-  const buildDiffObject = sortedUniqKeys.reduce(
+  const buildDifference = sortedUniqKeys.reduce(
     (acc, key) => {
       if (!Object.hasOwn(file1, key)) {
         return `${acc}\n + ${key}: ${file2[key]}`;
@@ -20,7 +20,7 @@ const gendiff = (file1, file2) => {
     '',
   );
 
-  return `{${buildDiffObject}\n}`;
+  return `{${buildDifference}\n}`;
 };
 
 export default gendiff;
