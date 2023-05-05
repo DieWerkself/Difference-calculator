@@ -1,9 +1,9 @@
 import { test, expect } from '@jest/globals';
-import gendiff from '../src/findDifference.js';
+import path from 'node:path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import fs from 'fs';
-import path from 'node:path';
+import gendiff from '../src/findDifference.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
