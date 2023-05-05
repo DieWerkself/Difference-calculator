@@ -2,12 +2,11 @@
 import { program } from 'commander';
 import { readFileSync } from 'node:fs';
 import process from 'process';
-import relativePath from 'node:path';
+import relative from 'node:path';
 import getDifference from '../src/findDifference.js';
 
-const mainPath = process.cwd();
-const isAbsolutePath = (path) => path.startsWith('/');
-const getCorrectPath = (path) => isAbsolutePath(path) ? mainPath + path : relativePath.resolve(path);
+const isAbsPath = (path) => path.startsWith('/');
+const getCorrectPath = (path) => (isAbsPath(path) ? process.cwd() + path : relative.resolve(path));
 
 program
   .version('0.0.1')
@@ -15,7 +14,7 @@ program
   .option('-f, --format <type>', 'output format')
   .argument('<filepath1>')
   .argument('<filepath2>')
-  .action(function (filepath1, filepath2) {
+  .action((filepath1, filepath2) => {
     const path1 = getCorrectPath(filepath1);
     const path2 = getCorrectPath(filepath2);
     const file1 = readFileSync(path1, { encoding: 'utf8', flag: 'r' });
