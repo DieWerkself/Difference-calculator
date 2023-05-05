@@ -24,3 +24,8 @@ test('YAMLdifference', () => {
   const expected = readFileSync(getFixturePath('YAMLexpected'), { encoding: 'utf8' });
   expect(gendiff(file1, file2)).toEqual(expected);
 });
+
+test('parser', () => {
+  const expected = new Error(`Undefined format .xml`);
+  expect(parseFile('file1.xml')).toEqual(expected);
+});
