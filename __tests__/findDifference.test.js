@@ -26,6 +26,6 @@ test('YAMLdifference', () => {
 });
 
 test('parser', () => {
-  const expected = new Error(`Undefined format .xml`);
+  const expected = new Error('Undefined format .xml');
   expect(parseFile('file1.xml')).toEqual(expected);
 });
