@@ -2,7 +2,7 @@
 import { program } from 'commander';
 import process from 'process';
 import relative from 'node:path';
-import getDifference from '../src/findDifference.js';
+import getDifference from '../src/index.js';
 import parseFile from '../src/lib/parsers.js';
 
 const isAbsPath = (path) => path.startsWith('/');
@@ -11,7 +11,7 @@ const getCorrectPath = (path) => (isAbsPath(path) ? process.cwd() + path : relat
 program
   .version('0.0.1')
   .description('Compares two configuration files and shows a difference.')
-  .option('-f, --format <type>', 'output format')
+  .option('-f, --format <type>', 'output format', 'stylish')
   .argument('<filepath1>')
   .argument('<filepath2>')
   .action((filepath1, filepath2) => {
