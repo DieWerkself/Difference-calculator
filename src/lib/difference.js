@@ -12,16 +12,14 @@ const gendiff = (file1, file2) => {
         return acc;
       }
       if (!Object.hasOwn(file1, key)) {
-        const value = isObject(file2[key]) ? _.cloneDeep(file2[key]) : file2[key];
         acc.push({
-          name: key, type: 'changed', status: '+', value,
+          name: key, type: 'changed', status: '+', value: file2[key],
         });
         return acc;
       }
       if (!Object.hasOwn(file2, key)) {
-        const value = isObject(file1[key]) ? _.cloneDeep(file1[key]) : file1[key];
         acc.push({
-          name: key, type: 'changed', status: '-', value,
+          name: key, type: 'changed', status: '-', value: file1[key],
         });
         return acc;
       }
