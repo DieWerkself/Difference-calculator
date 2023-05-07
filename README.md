@@ -9,5 +9,11 @@
 ## Find difference between flat YAML files
 [![asciicast](https://asciinema.org/a/FXM2iLtKkOLktC31G6TTCPjGp.svg)](https://asciinema.org/a/FXM2iLtKkOLktC31G6TTCPjGp)
 
-## Find difference between nested YAML or JSON files and show in Stylish format
+## Find difference between nested YAML or JSON files and show in stylish format
 [![asciicast](https://asciinema.org/a/3s6hkovzFLSk3fZmFWtuyZJ7N.svg)](https://asciinema.org/a/3s6hkovzFLSk3fZmFWtuyZJ7N)
+
+## Find difference between nested YAML or JSON files and show in plain format
+[![asciicast](https://asciinema.org/a/koYuYkv1b7lClFXpJLHiE6VLz.svg)](https://asciinema.org/a/koYuYkv1b7lClFXpJLHiE6VLz)
+
+## Find difference between nested YAML or JSON files and show in JSON format
+[![asciicast](https://asciinema.org/a/7FuStLsoi32fCmtHOVvQvxv60.svg)](https://asciinema.org/a/7FuStLsoi32fCmtHOVvQvxv60)

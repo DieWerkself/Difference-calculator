@@ -9,7 +9,7 @@ const stylish = (file) => {
   const calcIntend = (int) => ' '.repeat(int);
   const isObject = (obj) => _.isPlainObject(obj);
 
-  const createStylishValue = (object, int) => `{${lb}${object}${lb}${calcIntend(int)}}`;
+  const createStylishValue = (value, int) => `{${lb}${value}${lb}${calcIntend(int)}}`;
   const createStylishObject = (object, name, int) => `${calcIntend(int)}${name}: ${createStylishValue(object, int)}`;
   const createStylishProperty = (key, value, int, status = ' ') => `${calcIntend(int - shiftLeft)}${status} ${key}: ${value}`;
 
@@ -43,14 +43,14 @@ const stylish = (file) => {
       }
       case 'unchanged':
         return createStylishProperty(name, value, intend);
+      case 'updated':
+        return children.flatMap((child) => iter({ ...child, name }, intend)).join(lb);
       default:
-        return new Error(type);
+        throw new Error(type);
     }
   };
 
-  const result = file.flatMap((child) => iter(child, startIndentCount)).join('\n');
-
-  return `{\n${result}\n}`;
+  return `{${lb}${file.flatMap((child) => iter(child, startIndentCount)).join(lb)}${lb}}`;
 };
 
 export default stylish;

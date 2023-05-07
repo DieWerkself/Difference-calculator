@@ -2,7 +2,7 @@
 import { program } from 'commander';
 import process from 'process';
 import relative from 'node:path';
-import getDifference from '../src/index.js';
+import getDifference from '../src/formatters/index.js';
 import parseFile from '../src/lib/parsers.js';
 
 const isAbsPath = (path) => path.startsWith('/');

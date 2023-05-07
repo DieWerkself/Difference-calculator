@@ -25,10 +25,12 @@ const gendiff = (file1, file2) => {
       }
       if (file1[key] !== file2[key]) {
         acc.push({
-          name: key, type: 'changed', status: '-', value: file1[key],
-        });
-        acc.push({
-          name: key, type: 'changed', status: '+', value: file2[key],
+          name: key,
+          type: 'updated',
+          children: [
+            { type: 'changed', status: '-', value: file1[key] },
+            { type: 'changed', status: '+', value: file2[key] },
+          ],
         });
         return acc;
       }

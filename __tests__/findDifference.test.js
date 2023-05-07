@@ -1,9 +1,9 @@
 import { test, expect } from '@jest/globals';
-import path from 'node:path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import path from 'node:path';
 import { readFileSync } from 'node:fs';
-import gendiff from '../src/index.js';
+import gendiff from '../src/formatters/index.js';
 import parseFile from '../src/lib/parsers.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,14 +17,24 @@ const file2JSON = parseFile(getFixturePath('file2.json'));
 const file1YAML = parseFile(getFixturePath('file1.yaml'));
 const file2YAML = parseFile(getFixturePath('file2.yaml'));
 
-const expected = readFileSync(getFixturePath('stylish'), { encoding: 'utf8' });
+const stylish = readFileSync(getFixturePath('stylish'), { encoding: 'utf8' });
+const plain = readFileSync(getFixturePath('plain'), { encoding: 'utf8' });
+const json = readFileSync(getFixturePath('json.json'), { encoding: 'utf8' });
 
-test('JSONdifference', () => {
-  expect(gendiff(file1JSON, file2JSON)).toEqual(expected);
+test('differenceJSON', () => {
+  expect(gendiff(file1JSON, file2JSON)).toEqual(stylish);
 });
 
-test('YAMLdifference', () => {
-  expect(gendiff(file1YAML, file2YAML)).toEqual(expected);
+test('differenceYAML', () => {
+  expect(gendiff(file1YAML, file2YAML)).toEqual(stylish);
+});
+
+test('PlainDifference', () => {
+  expect(gendiff(file1YAML, file2YAML, 'plain')).toEqual(plain);
+});
+
+test('transformToJSON', () => {
+  expect(gendiff(file1YAML, file2YAML, 'json')).toEqual(json);
 });
 
 test('errors', () => {
