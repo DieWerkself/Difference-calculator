@@ -5,11 +5,10 @@ const plain = (file) => {
     const {
       name, type, children, value, status,
     } = node;
-    const string = [...path];
+    const string = [...path, name];
 
     const isObject = (obj) => _.isPlainObject(obj);
     const content = (val) => (isObject(val) ? '[complex value]' : JSON.stringify(val));
-    string.push(name);
 
     switch (type) {
       case 'object':

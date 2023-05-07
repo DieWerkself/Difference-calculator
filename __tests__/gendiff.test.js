@@ -11,24 +11,14 @@ const __dirname = dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
-let file1JSON;
-let file2JSON;
-let file1YAML;
-let file2YAML;
-let stylish;
-let plain;
-let json;
+const file1JSON = getFixturePath('file1.json');
+const file2JSON = getFixturePath('file2.json');
+const file1YAML = getFixturePath('file1.yaml');
+const file2YAML = getFixturePath('file2.yaml');
 
-beforeAll(() => {
-  file1JSON = getFixturePath('file1.json');
-  file2JSON = getFixturePath('file2.json');
-  file1YAML = getFixturePath('file1.yaml');
-  file2YAML = getFixturePath('file2.yaml');
-
-  stylish = readFileSync(getFixturePath('stylish'), { encoding: 'utf8' });
-  plain = readFileSync(getFixturePath('plain'), { encoding: 'utf8' });
-  json = readFileSync(getFixturePath('json.json'), { encoding: 'utf8' });
-});
+const stylish = readFileSync(getFixturePath('stylish'), { encoding: 'utf8' });
+const plain = readFileSync(getFixturePath('plain'), { encoding: 'utf8' });
+const json = readFileSync(getFixturePath('json.json'), { encoding: 'utf8' });
 
 describe('testDifference', () => {
   test('JSON', () => {
