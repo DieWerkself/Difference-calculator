@@ -27,7 +27,7 @@ const plain = (file) => {
     }
   };
 
-  return file.map((child) => iter(child)).join('\n').replaceAll(/"/g, "'");
+  return file.map((child) => iter(child)).filter(Boolean).join('\n').replaceAll(/"/g, "'");
 };
 
 export default plain;
