@@ -1,49 +1,56 @@
 import _ from 'lodash';
 
 const stylish = (file) => {
-  const depth = 4;
-  const calcDepth = (dept) => ' '.repeat(dept);
+  const startIndentCount = 4;
+  const intendPerNested = 4;
+  const shiftLeft = 2;
+  const lb = '\n';
+
+  const calcIntend = (int) => ' '.repeat(int);
   const isObject = (obj) => _.isPlainObject(obj);
 
-  const createObject = (node, dept) => {
-    if (!isObject(node)) return node;
+  const createStylishValue = (object, int) => `{${lb}${object}${lb}${calcIntend(int)}}`;
+  const createStylishObject = (object, name, int) => `${calcIntend(int)}${name}: ${createStylishValue(object, int)}`;
+  const createStylishProperty = (key, value, int, status = ' ') => `${calcIntend(int - shiftLeft)}${status} ${key}: ${value}`;
 
-    const eachValue = Object.entries(node).map((child) => {
-      const [key, value] = child;
-      if (isObject(value)) {
-        return `${calcDepth(dept)}${key}: {\n${createObject(value, dept + 4)}\n${calcDepth(dept)}}`;
-      }
-      return `${calcDepth(dept)}${key}: ${value}`;
-    });
-    return eachValue.join('\n');
+  const createImmutableObject = (object, intend) => {
+    const iter = (node, step) => {
+      const eachValue = Object.entries(node).map((child) => {
+        const [key, value] = child;
+        if (isObject(value)) {
+          return createStylishObject(iter(value, step + intendPerNested), key, step);
+        }
+        return `${calcIntend(step)}${key}: ${value}`;
+      });
+      return eachValue.join(lb);
+    };
+    return createStylishValue(iter(object, intend + intendPerNested), intend);
   };
 
-  const iter = (dept, node) => {
+  const iter = (node, intend) => {
     const {
-      name,
-      type,
-      children,
-      value,
-      status,
+      name, type, children, value, status,
     } = node;
 
     switch (type) {
       case 'object':
-        return `${calcDepth(dept)}${name}: {\n${children.flatMap((child) => iter(dept + 4, child)).join('')}${calcDepth(dept)}}\n`;
+        return createStylishObject(children.flatMap(
+          (child) => iter(child, intend + intendPerNested),
+        ).join(lb), name, intend);
       case 'changed': {
-        const str = isObject(value) ? `{\n${createObject(value, dept + 4)}\n${calcDepth(dept)}}` : value;
-        return `${calcDepth(dept - 2)}${status} ${name}: ${str}\n`;
+        const content = isObject(value) ? createImmutableObject(value, intend) : value;
+        return createStylishProperty(name, content, intend, status);
       }
       case 'unchanged':
-        return `${calcDepth(dept - 2)}  ${name}: ${value}\n`;
+        return createStylishProperty(name, value, intend);
       default:
         return new Error(type);
     }
   };
 
-  const result = file.flatMap((child) => iter(depth, child)).join('');
+  const result = file.flatMap((child) => iter(child, startIndentCount)).join('\n');
 
-  return `{\n${result}}`;
+  return `{\n${result}\n}`;
 };
 
 export default stylish;

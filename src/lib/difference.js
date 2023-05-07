@@ -37,7 +37,6 @@ const gendiff = (file1, file2) => {
       acc.push({
         name: key, type: 'unchanged', value: file1[key],
       });
-
       return acc;
     },
     [],

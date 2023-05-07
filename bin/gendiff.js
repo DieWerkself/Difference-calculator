@@ -19,6 +19,6 @@ program
     const path2 = getCorrectPath(filepath2);
     const file1 = parseFile(path1);
     const file2 = parseFile(path2);
-    console.log(getDifference(file1, file2));
+    console.log(getDifference(file1, file2, program.opts().format));
   })
   .parse(process.argv);
