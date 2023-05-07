@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import gendiff from '../src/formatters/index.js';
+import gendiff from '../index.js';
 import parseFile from '../src/lib/parsers.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -20,10 +20,10 @@ let plain;
 let json;
 
 beforeAll(() => {
-  file1JSON = parseFile(getFixturePath('file1.json'));
-  file2JSON = parseFile(getFixturePath('file2.json'));
-  file1YAML = parseFile(getFixturePath('file1.yaml'));
-  file2YAML = parseFile(getFixturePath('file2.yaml'));
+  file1JSON = getFixturePath('file1.json');
+  file2JSON = getFixturePath('file2.json');
+  file1YAML = getFixturePath('file1.yaml');
+  file2YAML = getFixturePath('file2.yaml');
 
   stylish = readFileSync(getFixturePath('stylish'), { encoding: 'utf8' });
   plain = readFileSync(getFixturePath('plain'), { encoding: 'utf8' });
@@ -50,7 +50,7 @@ describe('testFormatters', () => {
 
 describe('testErrors', () => {
   test('errorParsers', () => {
-    expect(parseFile('file1.xml')).toEqual(new Error('Undefined format .xml'));
+    expect(parseFile(file1JSON, '.xml')).toEqual(new Error('Undefined format .xml'));
   });
   test('errorFormat', () => {
     expect(gendiff(file1YAML, file2JSON, 'deep')).toEqual(new Error('deep'));

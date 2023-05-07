@@ -1,16 +1,14 @@
-import findDifference from '../difference.js';
 import stylish from './stylish.js';
 import plain from './plain.js';
 
-const diff = (file1, file2, formatName = 'stylish') => {
-  const diffFile = findDifference(file1, file2);
+const diff = (file, formatName) => {
   switch (formatName) {
     case 'stylish':
-      return stylish(diffFile);
+      return stylish(file);
     case 'plain':
-      return plain(diffFile);
+      return plain(file);
     case 'json':
-      return JSON.stringify(diffFile);
+      return JSON.stringify(file);
     default:
       return new Error(formatName);
   }
