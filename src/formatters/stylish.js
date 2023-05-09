@@ -1,56 +1,57 @@
 import _ from 'lodash';
 
+const lb = '\n';
+const shiftLeft = 2;
+const startIndent = 4;
+
+const calcIntend = (nestedLevel, left = 0) => ' '.repeat(nestedLevel * startIndent - left);
+const createStylishValue = (value, nestedLevel) => `{${lb}${value}${lb}${calcIntend(nestedLevel)}}`;
+const createStylishObject = (object, name, nestedLevel) => `${calcIntend(nestedLevel)}${name}: ${createStylishValue(object, nestedLevel)}`;
+const createStylishProperty = (key, value, nestedLevel, status = ' ') => `${calcIntend(nestedLevel, shiftLeft)}${status} ${key}: ${value}`;
+
 const stylish = (file) => {
-  const startIndentCount = 4;
-  const intendPerNested = 4;
-  const shiftLeft = 2;
-  const lb = '\n';
-
-  const calcIntend = (int) => ' '.repeat(int);
-  const isObject = (obj) => _.isPlainObject(obj);
-
-  const createStylishValue = (value, int) => `{${lb}${value}${lb}${calcIntend(int)}}`;
-  const createStylishObject = (object, name, int) => `${calcIntend(int)}${name}: ${createStylishValue(object, int)}`;
-  const createStylishProperty = (key, value, int, status = ' ') => `${calcIntend(int - shiftLeft)}${status} ${key}: ${value}`;
-
-  const createImmutableObject = (object, intend) => {
-    const iter = (node, step) => {
+  const createImmutableObject = (object, nestedLevel) => {
+    const iter = (node, nested) => {
       const eachValue = Object.entries(node).map((child) => {
         const [key, value] = child;
-        if (isObject(value)) {
-          return createStylishObject(iter(value, step + intendPerNested), key, step);
+        if (_.isPlainObject(value)) {
+          return createStylishObject(iter(value, nested + 1), key, nested);
         }
-        return `${calcIntend(step)}${key}: ${value}`;
+        return `${calcIntend(nested)}${key}: ${value}`;
       });
       return eachValue.join(lb);
     };
-    return createStylishValue(iter(object, intend + intendPerNested), intend);
+    return createStylishValue(iter(object, nestedLevel + 1), nestedLevel);
   };
 
-  const iter = (node, intend) => {
+  const iter = (node, nestedLevel = 1) => {
     const {
-      name, type, children, value, status,
+      name, type, children, value,
     } = node;
 
     switch (type) {
-      case 'object':
+      case 'nested':
         return createStylishObject(children.flatMap(
-          (child) => iter(child, intend + intendPerNested),
-        ).join(lb), name, intend);
-      case 'changed': {
-        const content = isObject(value) ? createImmutableObject(value, intend) : value;
-        return createStylishProperty(name, content, intend, status);
+          (child) => iter(child, nestedLevel + 1),
+        ).join(lb), name, nestedLevel);
+      case 'add': {
+        const content = _.isPlainObject(value) ? createImmutableObject(value, nestedLevel) : value;
+        return createStylishProperty(name, content, nestedLevel, '+');
+      }
+      case 'delete': {
+        const content = _.isPlainObject(value) ? createImmutableObject(value, nestedLevel) : value;
+        return createStylishProperty(name, content, nestedLevel, '-');
       }
       case 'unchanged':
-        return createStylishProperty(name, value, intend);
+        return createStylishProperty(name, value, nestedLevel);
       case 'updated':
-        return children.flatMap((child) => iter({ ...child, name }, intend)).join(lb);
+        return children.flatMap((child) => iter({ ...child, name }, nestedLevel)).join(lb);
       default:
-        throw new Error(type);
+        return new Error(type);
     }
   };
 
-  return `{${lb}${file.flatMap((child) => iter(child, startIndentCount)).join(lb)}${lb}}`;
+  return `{${lb}${file.flatMap((child) => iter(child)).join(lb)}${lb}}`;
 };
 
 export default stylish;

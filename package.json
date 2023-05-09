@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "[![Actions Status](https://github.com/DieWerkself/frontend-project-46/workflows/hexlet-check/badge.svg)](https://github.com/DieWerkself/frontend-project-46/actions)",
+  "description": "Find difference between two files",
   "type": "module",
   "main": "index.js",
   "bin": {
