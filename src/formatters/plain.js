@@ -5,27 +5,27 @@ const content = (value) => (_.isPlainObject(value) ? '[complex value]' : JSON.st
 const plain = (file) => {
   const iter = (node, path = []) => {
     const {
-      name, type, children, value,
+      name, children, value,
     } = node;
     const string = [...path, name];
 
-    switch (type) {
+    switch (node.type) {
       case 'nested':
         return children.map((child) => iter(child, string)).filter(Boolean).join('\n');
-      case 'add':
-        return `Property '${string.join('.')}' was added with value: ${content(value)}`;
-      case 'delete':
+      case 'added':
+        return `Property '${string.join('.')}' was added with value: ${content(value)}`.replace(/"/g, "'");
+      case 'deleted':
         return `Property '${string.join('.')}' was removed`;
       case 'updated':
-        return `Property '${string.join('.')}' was updated. From ${children.map((child) => content(child.value)).join(' to ')}`;
+        return `Property '${string.join('.')}' was updated. From ${content(value[0])} to ${content(value[1])}`.replace(/"/g, "'");
       case 'unchanged':
         return null;
       default:
-        throw new Error(type);
+        throw new Error(node.type);
     }
   };
 
-  return file.map((child) => iter(child)).filter(Boolean).join('\n').replaceAll(/"/g, "'");
+  return file.map((child) => iter(child)).filter(Boolean).join('\n');
 };
 
 export default plain;

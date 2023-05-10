@@ -10,19 +10,16 @@ const gendiff = (file1, file2) => {
         return { name: key, type: 'nested', children: gendiff(file1[key], file2[key]) };
       }
       if (!Object.hasOwn(file1, key)) {
-        return { name: key, type: 'add', value: file2[key] };
+        return { name: key, type: 'added', value: file2[key] };
       }
       if (!Object.hasOwn(file2, key)) {
-        return { name: key, type: 'delete', value: file1[key] };
+        return { name: key, type: 'deleted', value: file1[key] };
       }
       if (!(_.isEqual(file1[key], file2[key]))) {
         return {
           name: key,
           type: 'updated',
-          children: [
-            { type: 'delete', value: file1[key] },
-            { type: 'add', value: file2[key] },
-          ],
+          value: [file1[key], file2[key]],
         };
       }
       return { name: key, type: 'unchanged', value: file1[key] };
