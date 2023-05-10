@@ -20,7 +20,8 @@ const stylish = (file) => {
     return `{\n${iter(object, nestedLevel + 1)}\n${calcIntend(nestedLevel)}}`;
   };
 
-  const content = (value, nested) => (_.isPlainObject(value) ? createImmutableObject(value, nested) : value);
+  const content = (value, nested) => (_.isPlainObject(value)
+    ? createImmutableObject(value, nested) : value);
 
   const iter = (node, nestedLevel = 1) => {
     const {
