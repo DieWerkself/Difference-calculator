@@ -21,7 +21,7 @@ const createPlainDifference = (data) => {
     }
   };
 
-  return data.map((child) => createPlainNode(child)).filter(Boolean).join('\n');
+  return data.map((nestedNode) => createPlainNode(nestedNode)).filter(Boolean).join('\n');
 };
 
 export default createPlainDifference;

@@ -45,7 +45,7 @@ const createStylishDifference = (data) => {
     }
   };
 
-  return `{\n${data.flatMap((child) => createStylishNode(child)).join('\n')}\n}`;
+  return `{\n${data.flatMap((nestedNode) => createStylishNode(nestedNode)).join('\n')}\n}`;
 };
 
 export default createStylishDifference;
