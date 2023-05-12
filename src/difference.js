@@ -1,32 +1,33 @@
 import _ from 'lodash';
 
-const gendiff = (file1, file2) => {
-  const uniqKeys = _.union(Object.keys(file1), Object.keys(file2));
+const generateDifference = (data1, data2) => {
+  const uniqKeys = _.union(Object.keys(data1), Object.keys(data2));
   const sortedUniqKeys = _.sortBy(uniqKeys);
 
-  const buildDifference = sortedUniqKeys.map(
+  const createDifference = sortedUniqKeys.map(
     (key) => {
-      if (_.isPlainObject(file1[key]) && _.isPlainObject(file2[key])) {
-        return { name: key, type: 'nested', children: gendiff(file1[key], file2[key]) };
+      if (_.isPlainObject(data1[key]) && _.isPlainObject(data2[key])) {
+        return { name: key, type: 'nested', children: generateDifference(data1[key], data2[key]) };
       }
-      if (!Object.hasOwn(file1, key)) {
-        return { name: key, type: 'added', value: file2[key] };
+      if (!Object.hasOwn(data1, key)) {
+        return { name: key, type: 'added', value: data2[key] };
       }
-      if (!Object.hasOwn(file2, key)) {
-        return { name: key, type: 'deleted', value: file1[key] };
+      if (!Object.hasOwn(data2, key)) {
+        return { name: key, type: 'deleted', value: data1[key] };
       }
-      if (!(_.isEqual(file1[key], file2[key]))) {
+      if (!(_.isEqual(data1[key], data2[key]))) {
         return {
           name: key,
           type: 'updated',
-          value: [file1[key], file2[key]],
+          value1: data1[key],
+          value2: data2[key],
         };
       }
-      return { name: key, type: 'unchanged', value: file1[key] };
+      return { name: key, type: 'unchanged', value: data1[key] };
     },
   );
 
-  return buildDifference;
+  return createDifference;
 };
 
-export default gendiff;
+export default generateDifference;

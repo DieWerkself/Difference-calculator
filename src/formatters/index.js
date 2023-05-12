@@ -1,16 +1,16 @@
 import stylish from './stylish.js';
 import plain from './plain.js';
 
-const formatterSelect = (file, formaterName) => {
-  switch (formaterName) {
+const formatterSelect = (data, formatterName) => {
+  switch (formatterName) {
     case 'stylish':
-      return stylish(file);
+      return stylish(data);
     case 'plain':
-      return plain(file);
+      return plain(data);
     case 'json':
-      return JSON.stringify(file);
+      return JSON.stringify(data);
     default:
-      return new Error(`Unknown formatter: ${formaterName}`);
+      return new Error(`Unknown formatter: ${formatterName}`);
   }
 };
 

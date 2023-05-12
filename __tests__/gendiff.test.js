@@ -8,7 +8,7 @@ import gendiff from '../index.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
+const getFixturePath = (fileName) => path.join(__dirname, '..', '__fixtures__', fileName);
 
 describe('tests', () => {
   test.each([
@@ -17,9 +17,9 @@ describe('tests', () => {
     ['plainFormatter', 'file1.yaml', 'file2.yaml', 'plain', 'plain'],
     ['JSONFormatter', 'file1.json', 'file2.yaml', 'json.json', 'json'],
   ])('%s', (_, fileName1, fileName2, expectedResult, format) => {
-    const file1 = getFixturePath(fileName1);
-    const file2 = getFixturePath(fileName2);
+    const filePath1 = getFixturePath(fileName1);
+    const filePath2 = getFixturePath(fileName2);
     const expected = readFileSync(getFixturePath(expectedResult), { encoding: 'utf8' });
-    expect(gendiff(file1, file2, format)).toEqual(expected);
+    expect(gendiff(filePath1, filePath2, format)).toEqual(expected);
   });
 });
