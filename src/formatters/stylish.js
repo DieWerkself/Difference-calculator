@@ -27,7 +27,7 @@ const createStylishDifference = (data) => {
     switch (node.type) {
       case 'nested':
         return `${calcIntend(nestedLevel)}${node.name}: {\n${node.children.flatMap(
-          (child) => createStylishNode(child, nestedLevel + 1),
+          (nestedNode) => createStylishNode(nestedNode, nestedLevel + 1),
         ).join('\n')}\n${calcIntend(nestedLevel)}}`;
       case 'added':
         return `${calcIntend(nestedLevel, shiftLeft)}+ ${node.name}: ${getNodeValue(node.value, nestedLevel)}`;

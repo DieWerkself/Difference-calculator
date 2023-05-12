@@ -7,7 +7,7 @@ const createPlainDifference = (data) => {
 
     switch (node.type) {
       case 'nested':
-        return node.children.map((child) => createPlainNode(child, pathToNode)).filter(Boolean).join('\n');
+        return node.children.map((nestedNode) => createPlainNode(nestedNode, pathToNode)).filter(Boolean).join('\n');
       case 'added':
         return `Property '${pathToNode.join('.')}' was added with value: ${getNodeValue(node.value)}`.replace(/"/g, "'");
       case 'deleted':
