@@ -1,8 +1,8 @@
 import stylish from './stylish.js';
 import plain from './plain.js';
 
-const formatterSelect = (data, formatterName) => {
-  switch (formatterName) {
+const format = (data, formatter) => {
+  switch (formatter) {
     case 'stylish':
       return stylish(data);
     case 'plain':
@@ -10,8 +10,8 @@ const formatterSelect = (data, formatterName) => {
     case 'json':
       return JSON.stringify(data);
     default:
-      return new Error(`Unknown formatter: ${formatterName}`);
+      return new Error(`Unknown formatter: ${formatter}`);
   }
 };
 
-export default formatterSelect;
+export default format;

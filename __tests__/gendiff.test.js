@@ -9,14 +9,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const getFixturePath = (fileName) => path.join(__dirname, '..', '__fixtures__', fileName);
-
 describe('tests', () => {
   test.each([
-    ['JSONDifference', 'file1.json', 'file2.json', 'stylish', undefined],
-    ['YAMLDifference', 'file1.yaml', 'file2.yaml', 'stylish', undefined],
-    ['plainFormatter', 'file1.yaml', 'file2.yaml', 'plain', 'plain'],
-    ['JSONFormatter', 'file1.json', 'file2.yaml', 'json.json', 'json'],
-  ])('%s', (_, fileName1, fileName2, expectedResult, format) => {
+    ['file1.json', 'file2.json', undefined, 'stylishExpected'],
+    ['file1.json', 'file2.json', 'plain', 'plainExpected'],
+    ['file1.json', 'file2.json', 'json', 'jsonExpected'],
+    ['file1.yaml', 'file2.yaml', undefined, 'stylishExpected'],
+    ['file1.yaml', 'file2.yaml', 'plain', 'plainExpected'],
+    ['file1.yaml', 'file2.yaml', 'json', 'jsonExpected'],
+  ])('Difference between %o and %o with %o formatter', (fileName1, fileName2, format, expectedResult) => {
     const filePath1 = getFixturePath(fileName1);
     const filePath2 = getFixturePath(fileName2);
     const expected = readFileSync(getFixturePath(expectedResult), { encoding: 'utf8' });

@@ -1,44 +1,41 @@
 import _ from 'lodash';
 
-const shiftLeft = 2;
 const startIndent = 4;
+const shiftLeft = 2;
 
-const calcIntend = (nestedLevel, left = 0) => ' '.repeat(nestedLevel * startIndent - left);
+const calcIntend = (depth, left = 0) => ' '.repeat(depth * startIndent - left);
 
-const stringify = (object, nestedLevel) => {
-  const createStylishNode = (node, nestedLvl) => {
+const stringify = (value, depth) => {
+  const createStylishNode = (node, nodeDepth) => {
     const nodeArray = Object.entries(node).map((eachNode) => {
-      const [name, value] = eachNode;
-      if (_.isPlainObject(value)) {
-        return `${calcIntend(nestedLvl)}${name}: {\n${createStylishNode(value, nestedLvl + 1)}\n${calcIntend(nestedLvl)}}`;
+      const [nodeName, nodeValue] = eachNode;
+      if (_.isPlainObject(nodeValue)) {
+        return `${calcIntend(nodeDepth)}${nodeName}: {\n${createStylishNode(nodeValue, nodeDepth + 1)}\n${calcIntend(nodeDepth)}}`;
       }
-      return `${calcIntend(nestedLvl)}${name}: ${value}`;
+      return `${calcIntend(nodeDepth)}${nodeName}: ${nodeValue}`;
     });
     return nodeArray.join('\n');
   };
-  return `{\n${createStylishNode(object, nestedLevel + 1)}\n${calcIntend(nestedLevel)}}`;
+  return _.isPlainObject(value) ? `{\n${createStylishNode(value, depth + 1)}\n${calcIntend(depth)}}` : value;
 };
 
 const createStylishDifference = (data) => {
-  const createStylishNode = (node, nestedLevel = 1) => {
-    const getNodeValue = (value, nestedLvl) => (_.isPlainObject(value)
-      ? stringify(value, nestedLvl) : value);
-
+  const createStylishNode = (node, depth = 1) => {
     switch (node.type) {
       case 'nested':
-        return `${calcIntend(nestedLevel)}${node.name}: {\n${node.children.flatMap(
-          (nestedNode) => createStylishNode(nestedNode, nestedLevel + 1),
-        ).join('\n')}\n${calcIntend(nestedLevel)}}`;
+        return `${calcIntend(depth)}${node.name}: {\n${node.children.flatMap(
+          (nestedNode) => createStylishNode(nestedNode, depth + 1),
+        ).join('\n')}\n${calcIntend(depth)}}`;
       case 'added':
-        return `${calcIntend(nestedLevel, shiftLeft)}+ ${node.name}: ${getNodeValue(node.value, nestedLevel)}`;
+        return `${calcIntend(depth, shiftLeft)}+ ${node.name}: ${stringify(node.value, depth)}`;
       case 'deleted':
-        return `${calcIntend(nestedLevel, shiftLeft)}- ${node.name}: ${getNodeValue(node.value, nestedLevel)}`;
+        return `${calcIntend(depth, shiftLeft)}- ${node.name}: ${stringify(node.value, depth)}`;
       case 'unchanged':
-        return `${calcIntend(nestedLevel, shiftLeft)}  ${node.name}: ${getNodeValue(node.value, nestedLevel)}`;
+        return `${calcIntend(depth, shiftLeft)}  ${node.name}: ${stringify(node.value, depth)}`;
       case 'updated':
         return [
-          `${calcIntend(nestedLevel, shiftLeft)}- ${node.name}: ${getNodeValue(node.value1, nestedLevel)}`,
-          `${calcIntend(nestedLevel, shiftLeft)}+ ${node.name}: ${getNodeValue(node.value2, nestedLevel)}`,
+          `${calcIntend(depth, shiftLeft)}- ${node.name}: ${stringify(node.value1, depth)}`,
+          `${calcIntend(depth, shiftLeft)}+ ${node.name}: ${stringify(node.value2, depth)}`,
         ].join('\n');
       default:
         return new Error(node.type);
